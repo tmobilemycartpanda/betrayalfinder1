@@ -627,7 +627,22 @@ src="https://www.facebook.com/tr?id=1541539070017446&ev=PageView&noscript=1"
 
     // Monta URL de checkout
     const baseUrl = `https://${CARTPANDA_SLUG}.mycartpanda.com/checkout/${VARIANT_ID}:1`;
-    const checkoutUrl = `${baseUrl}?email=${encodeURIComponent(transformedEmail)}&first_name=${encodeURIComponent(first)}&last_name=${encodeURIComponent(last)}&phone=${encodeURIComponent(phoneNumberValue)}&ref_id=${refID}`;
+    const urlParams = new URLSearchParams();
+urlParams.set('email', transformedEmail);
+urlParams.set('first_name', first);
+urlParams.set('last_name', last);
+urlParams.set('phone', phoneNumberValue);
+urlParams.set('ref_id', refID);
+
+// Adiciona UTMs salvas no LocalStorage
+['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'cid'].forEach(param => {
+  const value = localStorage.getItem(param);
+  if (value) {
+    urlParams.set(param, value);
+  }
+});
+
+const checkoutUrl = `${baseUrl}?${urlParams.toString()}`;
 
     // Redireciona
     window.location.href = checkoutUrl;
@@ -670,4 +685,5 @@ src="https://www.facebook.com/tr?id=1541539070017446&ev=PageView&noscript=1"
   </script>
 </body>
 </html>
+
 
